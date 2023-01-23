@@ -1,5 +1,5 @@
 const isEqual = require("lodash/isEqual");
-const { findCardapioByDate } = require("../databases/querys");
+const { findCardapioByDate, todosOsCardpio } = require("../databases/querys");
 
 async function isItNeedToNotify(a, date, next) {
   if (a != null) {
@@ -13,6 +13,11 @@ async function isItNeedToNotify(a, date, next) {
 }
 
 async function isNeedToDrop(date, next) {
+  const getAllCardapio = await todosOsCardpio((e)=>e);
+  if(date != null ){
+    const isToContainer = isEqual(date, getAllCardapio);
+    return next(isToContainer);
+  } 
 
 }
 

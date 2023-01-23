@@ -51,7 +51,7 @@ router.post("/token", async (req, res) => {
 router.post("/drop", async (req, res) => {
   await dropCollection((e) => {
     // console.log(e);
-    if (!e) {
+    if (e) {
       main();
       // notify all users
       novoCardapioDaSemana();

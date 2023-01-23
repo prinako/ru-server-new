@@ -31,7 +31,12 @@ async function postCardapio(dados, next) {
       vegetariano2: dados.jantar[2],
     },
   });
+  return next(novoCadapio);
+  
+}
 
+//To put the cardapio into the database
+async function saveCardapioIntoDatabase(novoCadapio, next){
   const resolute = await novoCadapio.save((err, doc) => {
     if (err) {
       //updateCardapio(dados, next);
@@ -163,7 +168,7 @@ async function dropCollection(next) {
     // drop collection
     await Cardapio.collection
       .drop()
-      .then((e) => next(e))
+      .then((e) => next(true))
       .catch((err) => console.error(err));
   } else {
     return next(false);
@@ -199,4 +204,5 @@ module.exports = {
   dropCollection,
   postUsersTokens,
   getAllUsersTokens,
+  saveCardapioIntoDatabase,
 };
