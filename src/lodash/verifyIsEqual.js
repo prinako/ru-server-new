@@ -12,4 +12,8 @@ async function isItNeedToNotify(a, date, next) {
   }
 }
 
-module.exports = { isItNeedToNotify };
+async function isNeedToDrop(date, next) {
+
+}
+
+module.exports = { isItNeedToNotify, isNeedToDrop };
