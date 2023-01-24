@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const { isItNeedToNotify } = require("../lodash/verifyIsEqual");
+const { isItNeedToNotify, isNeedToDrop } = require("../lodash/verifyIsEqual");
 const {
   postCardapio,
   todosOsCardpio,
@@ -9,6 +9,7 @@ const {
   updateCardapio,
   findCardapioByDate,
   postUsersTokens,
+  saveCardapioIntoDatabase,
 } = require("../databases/querys");
 
 const { getAllCardapio } = require("../cardapio/getCardapio");
@@ -70,7 +71,7 @@ router.post("/update", async (req, res) => {
   }-${date.getFullYear()}`;
 
   const cardapioDeHoje = await findCardapioByDate(toDayDate, (e) => e);
-//  console.log(cardapioDeHoje);
+  //  console.log(cardapioDeHoje);
 
   await update(async (callback) => {
     await isItNeedToNotify(cardapioDeHoje, toDayDate, (next) => {
@@ -97,8 +98,17 @@ async function update(callback) {
 
 function main() {
   getAllCardapio(async (next) => {
-    postCardapio(await next, (e) => {
+    postCardapio(await next, async (e) => {
       // console.log("writing cardapio no database");
+      console.log(e);
+
+      const isNeed = await isNeedToDrop(e, (next)=>next);
+      console.log(isNeed);
+      if (!isNeed) {
+        await saveCardapioIntoDatabase(e ,(next)=>{
+          // console.log("
+        });
+      }
     });
   });
   return;

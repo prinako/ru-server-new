@@ -1,9 +1,7 @@
-
 const { User, Cardapio, Reclama, Feedback, UsersTokens } = require("./schema");
 
-
 async function postCardapio(dados, next) {
-  const novoCadapio = new Cardapio({
+  const novoCardapio = new Cardapio({
     dia: dados.dia[0],
     data: dados.dia[1],
     amoco: {
@@ -31,13 +29,12 @@ async function postCardapio(dados, next) {
       vegetariano2: dados.jantar[2],
     },
   });
-  return next(novoCadapio);
-  
+  return next(novoCardapio);
 }
 
 //To put the cardapio into the database
-async function saveCardapioIntoDatabase(novoCadapio, next){
-  const resolute = await novoCadapio.save((err, doc) => {
+async function saveCardapioIntoDatabase(novoCardapio, next) {
+  const resolute = await novoCardapio.save((err, doc) => {
     if (err) {
       //updateCardapio(dados, next);
       //console.log(err);
@@ -157,22 +154,27 @@ async function crioReclamaAqui(req, res) {
 
 async function dropCollection(next) {
   // verify collection if new cardápio has ben added or not.
-  const toBeVerified = await todosOsCardpio((e) => e);
-  const isToBeDrop = toBeVerified.length;
+  // const toBeVerified = await todosOsCardpio((e) => e);
+  // const isToBeDrop = toBeVerified.length;
 
   // console.log(isToBeDrop);
 
-  if (isToBeDrop > 6) {
-    // notify all users
-  //  await novoCardapioDaSemana();
-    // drop collection
-    await Cardapio.collection
-      .drop()
-      .then((e) => next(true))
-      .catch((err) => console.error(err));
-  } else {
-    return next(false);
-  }
+  await Cardapio.collection
+    .drop()
+    .then((e) => next(true))
+    .catch((err) => {
+      console.error(err);
+      next(false);
+    });
+
+  // if (isToBeDrop > 6) {
+  //   // notify all users
+  // //  await novoCardapioDaSemana();
+  //   // drop collection
+
+  // } else {
+  //   return next(false);
+  // }
 }
 
 async function crioFeedback(req, res) {
